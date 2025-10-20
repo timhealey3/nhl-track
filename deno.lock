@@ -811,6 +811,7 @@
       "dependencies": [
         "npm:axios@^1.12.2",
         "npm:cheerio@^1.1.2",
+        "npm:js-yaml@^4.1.0",
         "npm:puppeteer@^24.25.0"
       ]
     }

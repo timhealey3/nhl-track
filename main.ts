@@ -1,9 +1,10 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import * as fs from "fs";
 import * as yaml from "js-yaml";
 
-const ymlContent = fs.readFileSync("Application.yml", "utf8");
+  // Read the YAML file using Deno
+const ymlContent = await Deno.readTextFile("Application.yml");
+  // Parse YAML
 const config = yaml.load(ymlContent) as { website: { url: string } };
 const web_url = config.website.url;
 
