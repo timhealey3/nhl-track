@@ -1,2 +1,0 @@
-- webscrape scores and stastiics
-- display in terminal
