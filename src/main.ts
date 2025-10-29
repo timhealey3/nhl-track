@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import * as yaml from "js-yaml";
-
+import { boxscore } from "./boxscore.ts";
 
   // Read the YAML file using Deno
 const ymlContent = await Deno.readTextFile("../Application.yml");
@@ -29,7 +29,6 @@ async function main() {
       games.push(element);
     });
     
-    console.log(games);
     let gameCounter: number = 1;
     $('script[type="application/ld+json"]').each((_, el) => {
       let content = $(el).html();
@@ -56,11 +55,21 @@ async function main() {
     while (name && isNaN(parseInt(name))) {
       name = prompt("Select which game you would like to watch >");
     }
-    console.log(`selected: ${games[parseInt(name) - 1]}`);
+    const selectedGame: string = games[parseInt(name) - 1];
+
+    let base_url: string = `https://www.cbssports.com/nhl/gametracker/boxscore/${selectedGame}/`;
+
+    while (await boxscore(base_url)) {
+      await sleep(15);
+    }
   }
   catch {
     console.log("Webscrape failed");
   }
+}
+
+async function sleep(seconds) {
+  return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 }
 
 main();
