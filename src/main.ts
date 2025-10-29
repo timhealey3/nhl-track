@@ -10,6 +10,7 @@ const config = yaml.load(ymlContent) as { website: { url: string } };
 const web_url = config.website.url;
 
 async function main() {
+  while (true) {
   const games: string[] = [];
   const url = web_url;
   const currentDate: Date = new Date();
@@ -50,22 +51,31 @@ async function main() {
         console.error("JSON parse failed:", err.message);
       }
     });
-    let name: string = " ";
-
-    while (name && isNaN(parseInt(name))) {
-      name = prompt("Select which game you would like to watch >");
+    let selection: number | null = null;
+    while (selection === null) {
+      const input = (prompt("Input game >") || "").trim();
+      const n = parseInt(input, 10);
+      if (!Number.isNaN(n) && n >= 1 && n <= games.length) {
+        selection = n;
+      }
     }
-    const selectedGame: string = games[parseInt(name) - 1];
+    const selectedGame: string = games[selection - 1];
 
     let base_url: string = `https://www.cbssports.com/nhl/gametracker/boxscore/${selectedGame}/`;
 
     while (await boxscore(base_url)) {
+      let commands = prompt("> ");
+      if (commands && (commands == "q" || commands == "quit")) {
+        console.clear();
+        break;
+      }
       await sleep(15);
     }
   }
   catch {
     console.log("Webscrape failed");
   }
+}
 }
 
 async function sleep(seconds) {
